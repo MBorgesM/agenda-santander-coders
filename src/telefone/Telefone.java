@@ -63,4 +63,9 @@ public class Telefone {
         return this.ddd.equals(telefone.getDdd()) &&
                 this.numero.equals(telefone.getNumero());
     }
+
+    @Override
+    public String toString() {
+        return this.id + "  | (" + this.ddd + ") " + this.numero;
+    }
 }

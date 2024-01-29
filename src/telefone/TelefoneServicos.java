@@ -4,6 +4,9 @@ import exceptions.TelefoneJaCadastradoException;
 import util.Util;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
 import java.util.Scanner;
 
 public class TelefoneServicos {
@@ -41,19 +44,43 @@ public class TelefoneServicos {
     }
 
     public static Telefone recuperarTelefonePeloId(Long id, String pathArquivo) throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader(pathArquivo));
-        String telefoneLinha;
+        try (BufferedReader reader = new BufferedReader(new FileReader(pathArquivo))) {
+            String telefoneLinha;
 
-        while ((telefoneLinha = reader.readLine()) != null) {
-            String idAtual = telefoneLinha.split(";")[0];
+            while ((telefoneLinha = reader.readLine()) != null) {
+                String idAtual = telefoneLinha.split(";")[0];
+                Long idAtualLong = Long.valueOf(idAtual);
+
+                if (id.equals(idAtualLong)) {
+                    return Telefone.linhaParaTelefone(telefoneLinha);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static void removerTelefone(Long id, String path, String pathArquivo) throws IOException {
+        File arquivoOriginal = new File(pathArquivo);
+        File arquivoAux = new File(path + "telefones_temp.txt");
+        BufferedReader reader = new BufferedReader(new FileReader(pathArquivo));
+        BufferedWriter writer = new BufferedWriter(new FileWriter(path + "telefones_temp.txt"));
+        String linha;
+
+        while ((linha = reader.readLine()) != null) {
+            String idAtual = linha.split(";")[0];
             Long idAtualLong = Long.valueOf(idAtual);
 
-            if (id.equals(idAtualLong)) {
-                return Telefone.linhaParaTelefone(telefoneLinha);
-            }
+            if (id.equals(idAtualLong)) continue;
+            writer.write(linha);
+            writer.newLine();
         }
 
-        return null;
+        writer.close();
+        reader.close();
+        Files.delete(Paths.get(pathArquivo));
+        arquivoAux.renameTo(arquivoOriginal);
     }
 
     private static boolean validaTelefoneUnico(String ddd, Long numero, String pathArquivo) throws IOException {

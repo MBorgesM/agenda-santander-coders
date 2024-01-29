@@ -13,6 +13,10 @@ public class Contato {
     private String sobrenome;
     private List<Telefone> telefones;
 
+    public Contato() {
+        this.telefones = new ArrayList<>();
+    }
+
     public Contato(Long id, String nome, String sobrenome, List<Telefone> telefones) {
         this.id = id;
         this.nome = nome;
@@ -46,6 +50,14 @@ public class Contato {
 
     public void setTelefones(List<Telefone> telefones) {
         this.telefones = telefones;
+    }
+
+    public void addTelefone(Telefone telefone) {
+        this.telefones.add(telefone);
+    }
+
+    public void removerTelefone(Long idTelefone) {
+        this.telefones.removeIf(telefone -> telefone.getId().equals(idTelefone));
     }
 
     public String contatoParaLinha() {

@@ -1,6 +1,7 @@
 package menu;
 
 import contato.Contato;
+import telefone.Telefone;
 
 import java.util.List;
 
@@ -44,5 +45,20 @@ public class Menu {
                 
                 Obrigado por utilizar nossa agenda!
                 """);
+    }
+
+    public static void printTelefones(List<Telefone> telefones) {
+        StringBuilder sb = new StringBuilder("""
+                
+                >>>> Telefones <<<<
+                ID | Número
+                """);
+
+        for (Telefone telefone : telefones) {
+            sb.append(telefone);
+            sb.append("\n");
+        }
+
+        System.out.println(sb);
     }
 }
